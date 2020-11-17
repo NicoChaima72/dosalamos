@@ -17,7 +17,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3><%= productCount %></h3>
+                    <h3>4</h3>
 
                     <p>Productos</p>
                 </div>
@@ -33,7 +33,7 @@
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3><%= contactPending %></h3>
+                    <h3>4</h3>
 
                     <p>Pedidos pendientes</p>
                 </div>
@@ -49,7 +49,7 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3><%= contactCount %></h3>
+                    <h3>4</h3>
 
                     <p>Pedidos totales</p>
                 </div>
@@ -65,7 +65,7 @@
             <!-- small box -->
             <div class="small-box bg-secondary">
                 <div class="inner">
-                    <h3><%= userCount %></h3>
+                    <h3>4</h3>
 
                     <p>Usuarios registrados</p>
                 </div>
@@ -96,94 +96,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <% lastContacts.forEach((order) => { %>
-                    <tr>
-                        <td>
-                            <%= order.dateShow %>
-                        </td>
-                        <td class="d-none">
-                            <%= order.date %>
-                        </td>
-                        <td>
-                            <% if (order.state === 0) { %>
-                            <small class="badge badge-warning">P</small>
-                            <%  } else { %>
-                            <small class="badge badge-success">F</small>
-                            <% } %>
-                        </td>
-                        <td>
-                            <% if (order.message.length > 60) { %>
-                            <%=   order.message.substring(0, 60) %> ...
-                            <% } else { %>
-                            <%= order.message %>
-                            <% } %>
-                        </td>
-                        <td>
-                            <% if (order.email.length > 40) { %>
-                            <%=   order.email.substring(0, 40) %> ...
-                            <% } else { %>
-                            <%= order.email %>
-                            <% } %>
-                        </td>
-                        <td>
-                            <% if (order.name.length > 25) { %>
-                            <%=   order.name.substring(0, 25) %> ...
-                            <% } else { %>
-                            <%= order.name %>
-                            <% } %>
-                        </td>
-                        <td>
-                            <div class="d-flex">
-                                <button type="button"
-                                    class="btn btn-<% if (order.state === 0) { %>warning<% } else { %>success<% } %> btn-sm mx-1"
-                                    data-toggle="modal" data-target="#modal-<%= order._id %>">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <div class="modal fade" id="modal-<%= order._id %>" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Pedido</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-12 mb-3">
-                                                <label for="name" class="form-label">Nombres (*)</label>
-                                                <input type="text" class="form-control" value="<%= order.name %>"
-                                                    disabled>
-                                            </div>
-                                            <div class="col-12 col-md-6 mb-3">
-                                                <label for="email" class="form-label">Email (*)</label>
-                                                <input type="email" class="form-control" disabled
-                                                    value="<%= order.email %>">
-                                            </div>
-                                            <div class="col-12 col-md-6 mb-3">
-                                                <label for="telefono" class="form-label">Telefono (*)</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text" id="basic-addon1">+56</span>
-                                                    <input type="number" class="form-control" value="<%= order.phone %>"
-                                                        disabled>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <label for="mensaje" class="form-label">Mensaje (*)</label>
-                                                <textarea class="form-control" rows="7" disabled><%= order.message %>
-                                            </textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </tr>
-                    <% }) %>
-                </tbody>
+
             </table>
         </div>
     </div>

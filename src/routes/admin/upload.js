@@ -4,8 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const fileUpload = require("express-fileupload");
 
-const Product = require("../../models/Product");
 const { isAuthenticated, isAdmin } = require("../../helpers/auth");
+const pool = require("../../database");
 
 router.use(
 	fileUpload({
@@ -43,9 +43,9 @@ router.post(
 
 		const imageName = `${id}.${extension}`;
 
-		image.mv(`src/public/img/products/${imageName}`, (err) => {
+		image.mv(`src/public/img/products/${imageName}`, async (err) => {
 			if (err) return res.status(500).json({ ok: false, err });
-			updateProduct(id, res, req, imageName);
+			await updateProduct(id, res, req, imageName);
 		});
 	}
 );
@@ -56,47 +56,37 @@ router.get(
 	async (req, res) => {
 		const id = req.params.id;
 
-		Product.findByIdAndRemove(id, (err, product) => {
-			if (err) return res.status(400).json({ ok: false, err });
+		const product = await pool.query("SELECT * FROM products WHERE id = ?", [
+			id,
+		]);
+		product ? product[0] : null;
+		await pool.query("DELETE FROM products WHERE id = ?", [id]);
 
-			if (product === null)
-				return res.status(400).json({
-					ok: false,
-					err: { message: "Id no encontrado" },
-				});
-
-			deleteFile(product.photo_url);
-			req.flash("success_msg", "Producto eliminado correctamente");
-			res.redirect("/admin/products");
-		});
+		deleteFile(product.photo_url);
+		req.flash("success", "Producto eliminado correctamente");
+		res.redirect("/admin/products");
 	}
 );
 
-function updateProduct(id, res, req, imageName) {
-	Product.findById(id, (err, product) => {
-		if (err) {
-			deleteFile(imageName);
-			return res.status(500).json({ ok: false, err });
-		}
+async function updateProduct(id, res, req, imageName) {
+	const product = await pool.query("SELECT * FROM products WHERE id = ?", [id]);
+	product ? product[0] : null;
 
-		if (!product) {
-			deleteFile(imageName);
-			return res.status(400).json({
-				ok: false,
-				err: { message: "El producto no existe" },
-			});
-		}
-
-		// if (product.photo_url) deleteFile(product.pho	to_url);
-
-		product.photo_url = imageName;
-
-		product.save((err, productDB) => {
-			if (err) return res.status(500).json({ ok: false, err });
-			req.flash("success_msg", "Foto actualizada correctamente");
-			res.redirect("/admin/products");
+	if (!product) {
+		deleteFile(imageName);
+		return res.status(400).json({
+			ok: false,
+			err: { message: "El producto no existe" },
 		});
-	});
+	}
+
+	await pool.query("UPDATE products SET photo_url = ? WHERE id = ?", [
+		imageName,
+		id,
+	]);
+
+	req.flash("success", "Foto actualizada correctamente");
+	res.redirect("/admin/products");
 }
 
 function deleteFile(fileName) {

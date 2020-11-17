@@ -34,13 +34,13 @@
                         <div class="d-flex">
                             <% if (user.role != 'ADMIN_ROLE') { %>
                             <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este usuario se eliminara ¿Estás seguro?') ?
-                                document.getElementById('form-delete-<%= user._id %>').submit() : null">
+                                document.getElementById('form-delete-<%= user.id %>').submit() : null">
                                 <i class="fas fa-trash"></i>
                             </button>
                             <% } %>
                         </div>
                     </td>
-                    <form action="/admin/users/<%= user._id %>?_method=DELETE" id="form-delete-<%= user._id %>"
+                    <form action="/admin/users/<%= user.id %>?_method=DELETE" id="form-delete-<%= user.id %>"
                         class="d-none" method="POST">
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>

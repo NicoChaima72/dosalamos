@@ -35,7 +35,7 @@
                         </div>
                         <% } else { %>
                         <button type="button" class="btn btn-link btn-sm mx-1" data-toggle="modal"
-                            data-target="#modal-<%= product._id %>">Agregar</button>
+                            data-target="#modal-<%= product.id %>">Agregar</button>
                         <% } %>
                     </td>
                     <td class="d-none"><%= product.date %></td>
@@ -50,24 +50,24 @@
                     </td>
                     <td>
                         <div class="d-flex">
-                            <a href="/admin/products/<%= product._id %>/edit" class="btn btn-primary btn-sm mx-1"><i
+                            <a href="/admin/products/<%= product.id %>/edit" class="btn btn-primary btn-sm mx-1"><i
                                     class="fas fa-pen"></i></a>
                             <button type="button" class="btn btn-success btn-sm mx-1" data-toggle="modal"
-                                data-target="#modal-<%= product._id %>">
+                                data-target="#modal-<%= product.id %>">
                                 <i class="far fa-image"></i>
                             </button>
-                            <a href="/product/<%= product._id %>" target="_blank" class="btn btn-warning btn-sm mx-1"><i
+                            <a href="/product/<%= product.id %>" target="_blank" class="btn btn-warning btn-sm mx-1"><i
                                     class="fas fa-eye"></i></a>
                             <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este producto se eliminara ¿Estás seguro?') ?
-                                document.getElementById('form-delete-<%= product._id %>').submit() : null">
+                                document.getElementById('form-delete-<%= product.id %>').submit() : null">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
-                    <div class="modal fade" id="modal-<%= product._id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal fade" id="modal-<%= product.id %>" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="/admin/upload/<%= product._id %>" method="POST"
+                                <form action="/admin/upload/<%= product.id %>" method="POST"
                                     enctype="multipart/form-data">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Imagen producto</h5>
@@ -83,17 +83,17 @@
                                                     <div class="custom-file">
                                                         <input type="file" class="custom-file-input" name="image"
                                                             accept="image/*"
-                                                            onchange="loadImage(event, '<%= product._id %>')" required>
+                                                            onchange="loadImage(event, '<%= product.id %>')" required>
                                                         <label class=" custom-file-label" for="image">Seleccionar
                                                             imagen</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 my-3 <% if (!product.photo_url) { %> d-none <% } %>"
-                                                id="containerImagePreview-<%= product._id %>">
+                                                id="containerImagePreview-<%= product.id %>">
                                                 <div class="imagen-rectangular rounded-lg">
                                                     <img src="<% if (product.photo_url) { %> /img/products/<%= product.photo_url %> <% } %>"
-                                                        id="imagePreview-<%= product._id %>" class="rounded-lg">
+                                                        id="imagePreview-<%= product.id %>" class="rounded-lg">
                                                 </div>
                                             </div>
                                         </div>
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <form action="/admin/products/<%= product._id %>?_method=DELETE" id="form-delete-<%= product._id %>"
+                    <form action="/admin/products/<%= product.id %>?_method=DELETE" id="form-delete-<%= product.id %>"
                         class="d-none" method="POST">
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>

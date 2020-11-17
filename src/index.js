@@ -52,13 +52,13 @@ app.use((req, res, next) => {
 // routes
 app.use(require("./routes/routes"));
 app.use(require("./routes/authentication"));
-// app.use(require("./routes/products"));
+app.use(require("./routes/products"));
 // app.use(require("./routes/contacts"));
-// app.use(require("./routes/admin/routes"));
-// app.use(require("./routes/admin/products"));
+app.use(require("./routes/admin/routes"));
+app.use(require("./routes/admin/products"));
 // app.use(require("./routes/admin/contacts"));
-// app.use(require("./routes/admin/users"));
-// app.use(require("./routes/admin/upload"));
+app.use(require("./routes/admin/users"));
+app.use(require("./routes/admin/upload"));
 
 // static files
 app.use(express.static(path.join(__dirname, "public")));

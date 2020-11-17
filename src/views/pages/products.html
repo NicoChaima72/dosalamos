@@ -8,7 +8,7 @@
     <div class="row">
         <% products.forEach((product) => { %>
         <div class="col-6 col-md-4 mb-3 p-1">
-            <a href="/product/<%= product._id %>" class="card rounded-lg">
+            <a href="/product/<%= product.id %>" class="card rounded-lg">
                 <div class="imagen-rectangular">
                     <img src="/img/products/<%= product.photo_url %>" class="card-img-top rounded-lg" alt="...">
                 </div>

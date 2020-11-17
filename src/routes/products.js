@@ -1,9 +1,9 @@
 const express = require("express");
-const Product = require("../models/Product");
+const pool = require("../database");
 const router = express.Router();
 
 router.get("/product", async (req, res) => {
-	const products = await Product.find();
+	const products = await pool.query("SELECT * FROM products");
 
 	res.render("pages/products.html", {
 		title: "Productos",
@@ -13,18 +13,13 @@ router.get("/product", async (req, res) => {
 });
 
 router.get("/product/:id", async (req, res) => {
-	const product = await Product.findById(req.params.id);
+	const id = req.params.id;
+	const product = await pool.query("SELECT * FROM products WHERE id = ?", [id]);
 	res.render("pages/product.html", {
 		title: product.name + " - ver producto",
 		file: "",
-		product,
+		product: product[0],
 	});
 });
-
-router.post("/product", (req, res) => {});
-
-router.put("/product/:id", (req, res) => {});
-
-router.delete("/product/:id", (req, res) => {});
 
 module.exports = router;

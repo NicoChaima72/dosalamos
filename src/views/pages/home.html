@@ -50,6 +50,28 @@
     <h2 class="d-block d-md-none h1">Ultimos productos</h2>
     <h2 class="d-none d-md-block display-5">Ultimos productos</h2>
     <hr>
+    <div class="row">
+        <% lastProducts.forEach((product) => { %>
+        <div class="col-6 col-md-4 mb-3 p-1">
+            <a href="/product/<%= product.id %>" class="card rounded-lg">
+                <div class="imagen-rectangular">
+                    <img src="/img/products/<%= product.photo_url %>" class="card-img-top rounded-lg" alt="...">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-dark"><%= product.name %></h5>
+                    <p class="text-muted m-0">
+                        <% if (product.description.length > 60) { %>
+                        <%=   product.description.substring(0, 60) %> ...
+                        <% } else { %>
+                        <%= product.description %>
+                        <% } %>
+                    </p>
+                    <p class="text-success m-0 lead">$<%= product.price %></p>
+                </div>
+            </a>
+        </div>
+        <% }) %>
+    </div>
     <div class="w-100 text-center mt-3 mb-5">
         <a href="/product" class="btn btn-primary mx-auto">Ver todos los productos</a>
     </div>

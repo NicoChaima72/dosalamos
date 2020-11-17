@@ -1,11 +1,11 @@
 const express = require("express");
+const pool = require("../../database");
 const router = express.Router();
-const Product = require("../../models/Product");
 
 const { isAuthenticated, isAdmin } = require("../../helpers/auth");
 
 router.get("/admin/products", [isAuthenticated, isAdmin], async (req, res) => {
-	const products = await Product.find();
+	const products = await pool.query("SELECT * FROM products");
 
 	res.render("admin/product/list.html", {
 		title: "Lista productos",
@@ -38,10 +38,6 @@ router.post("/admin/products", [isAuthenticated, isAdmin], async (req, res) => {
 	if (price.length === 0) {
 		errors.push({ text: "El precio es requerido" });
 	}
-	const existProduct = await Product.findOne({ name });
-	if (existProduct) {
-		errors.push({ text: "El nombre ya está registrado" });
-	}
 
 	if (errors.length > 0) {
 		req.flash("error_msg", errors);
@@ -49,10 +45,10 @@ router.post("/admin/products", [isAuthenticated, isAdmin], async (req, res) => {
 		res.redirect("/admin/products/create");
 	}
 
-	const newProduct = new Product({ name, description, price });
-	await newProduct.save();
+	const newProduct = { name, description, price };
+	await pool.query("INSERT INTO products SET ?", [newProduct]);
 
-	req.flash("success_msg", "Producto agregado correctamente");
+	req.flash("success", "Producto agregado correctamente");
 	res.redirect("/admin/products");
 });
 
@@ -67,11 +63,13 @@ router.get(
 	[isAuthenticated, isAdmin],
 	async (req, res) => {
 		const id = req.params.id;
-		const product = await Product.findById(id);
+		const product = await pool.query("SELECT * FROM products WHERE id = ?", [
+			id,
+		]);
 		res.render("admin/product/edit.html", {
 			title: "Editar producto",
 			file: "admin.products",
-			product,
+			product: product[0],
 		});
 	}
 );
@@ -100,24 +98,17 @@ router.put(
 			res.redirect(`/admin/products/${id}/edit`);
 		}
 
-		Product.findByIdAndUpdate(
-			id,
-			{ name, description, price },
-			{ new: true },
-			(err, product) => {
-				if (err) return res.status(400).json({ ok: false, err });
-
-				req.flash("success_msg", "Producto actualizado correctamente");
-				res.redirect("/admin/products");
-			}
-		);
+		product = { name, description, price };
+		await pool.query("UPDATE products SET ? WHERE id = ?", [product, id]);
+		req.flash("success", "Producto actualizado correctamente");
+		res.redirect("/admin/products");
 	}
 );
 
 router.delete("/admin/products/:id", [isAuthenticated, isAdmin], (req, res) => {
 	const id = req.params.id;
 
-	res.redirect(`/admin/upload/${id}/delete`);
+	return res.redirect(`/admin/upload/${id}/delete`);
 });
 
 module.exports = router;
