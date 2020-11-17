@@ -1,0 +1,170 @@
+<%- include ('../partials/head.html') %>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Pedidos</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="card p-2">
+        <table id="dataTable" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th class="d-none">Fecha</th>
+                    <th>E</th>
+                    <th>Mensaje</th>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach((order) => { %>
+                <tr>
+                    <td>
+                        <%= order.dateShow %>
+                    </td>
+                    <td class="d-none">
+                        <%= order.date %>
+                    </td>
+                    <td>
+                        <% if (order.state === 0) { %>
+                        <small class="badge badge-warning">P</small>
+                        <%  } else { %>
+                        <small class="badge badge-success">F</small>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (order.message.length > 60) { %>
+                        <%=   order.message.substring(0, 60) %> ...
+                        <% } else { %>
+                        <%= order.message %>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (order.email.length > 40) { %>
+                        <%=   order.email.substring(0, 40) %> ...
+                        <% } else { %>
+                        <%= order.email %>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (order.name.length > 25) { %>
+                        <%=   order.name.substring(0, 25) %> ...
+                        <% } else { %>
+                        <%= order.name %>
+                        <% } %>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-<% if (order.state === 0) { %>warning<% } else { %>success<% } %> btn-sm
+                                mx-1" data-toggle="modal" data-target="#modal-<%= order._id %>">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este pedido se eliminara ¿Estás seguro?') ?
+                                document.getElementById('form-delete-<%= order._id %>').submit() : null">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <div class="modal fade" id="modal-<%= order._id %>" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Pedido</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label for="name" class="form-label">Nombres (*)</label>
+                                            <input type="text" class="form-control" value="<%= order.name %>" disabled>
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email (*)</label>
+                                            <input type="email" class="form-control" disabled
+                                                value="<%= order.email %>">
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="telefono" class="form-label">Telefono (*)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="basic-addon1">+56</span>
+                                                <input type="number" class="form-control" value="<%= order.phone %>"
+                                                    disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="mensaje" class="form-label">Mensaje (*)</label>
+                                            <textarea class="form-control" rows="7" disabled><%= order.message %>
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <% if (order.state == 0) { %>
+                                    <button type="button" class="btn btn-success" onclick="confirm('¿Actualizar pedido a finalizado?') ?
+                                        document.getElementById('form-edit-<%= order._id %>').submit() : null">
+                                        Marcar finalizado
+                                    </button>
+                                    <% } else { %>
+                                    <button type="button" class="btn btn-warning" onclick="confirm('¿Actualizar pedido a pendiente?') ?
+                                        document.getElementById('form-edit-<%= order._id %>-pending').submit() : null">
+                                        Marcar pendiente
+                                    </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form action="/admin/contacts/<%= order._id %>?_method=DELETE" id="form-delete-<%= order._id %>"
+                        class="d-none" method="POST">
+                        <input type="hidden" name="_method" value="DELETE" />
+                    </form>
+                    <form action="/admin/contacts/<%= order._id %>?_method=PUT" id="form-edit-<%= order._id %>"
+                        class="d-none" method="POST">
+                        <input type="hidden" name="_method" value="PUT" />
+                    </form>
+                    <form action="/admin/contacts/<%= order._id %>/pending?_method=PUT"
+                        id="form-edit-<%= order._id %>-pending" class="d-none" method="POST">
+                        <input type="hidden" name="_method" value="PUT" />
+                    </form>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+<script src="/js/admin/jquery.dataTables.min.js"></script>
+<script src="/js/admin/dataTables.bootstrap4.min.js"></script>
+<script src="/js/admin/dataTables.responsive.min.js"></script>
+<script src="/js/admin/responsive.bootstrap4.min.js"></script>
+
+
+<script>
+    $('#dataTable').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        "order": [1, "asc"]
+    });
+</script>
+
+
+<%- include ('../partials/footer.html') %>

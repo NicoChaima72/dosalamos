@@ -1,0 +1,156 @@
+<%- include ('../partials/head.html') %>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <h1>Productos</h1>
+                <a href="/admin/products/create" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Agregar</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="card p-2">
+        <table id="dataTable" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th class="d-none">Fecha</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Descripcion</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach((product) => { %>
+                <tr>
+                    <td>
+                        <% if (product.photo_url) { %>
+                        <div class="imagen-rectangular">
+                            <img src="/img/products/<%= product.photo_url %>" alt="" width="">
+                        </div>
+                        <% } else { %>
+                        <button type="button" class="btn btn-link btn-sm mx-1" data-toggle="modal"
+                            data-target="#modal-<%= product._id %>">Agregar</button>
+                        <% } %>
+                    </td>
+                    <td class="d-none"><%= product.date %></td>
+                    <td><%= product.name %></td>
+                    <td><%= product.price %></td>
+                    <td>
+                        <% if (product.description.length > 60) { %>
+                        <%=   product.description.substring(0, 60) %> ...
+                        <% } else { %>
+                        <%= product.description %>
+                        <% } %>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="/admin/products/<%= product._id %>/edit" class="btn btn-primary btn-sm mx-1"><i
+                                    class="fas fa-pen"></i></a>
+                            <button type="button" class="btn btn-success btn-sm mx-1" data-toggle="modal"
+                                data-target="#modal-<%= product._id %>">
+                                <i class="far fa-image"></i>
+                            </button>
+                            <a href="/product/<%= product._id %>" target="_blank" class="btn btn-warning btn-sm mx-1"><i
+                                    class="fas fa-eye"></i></a>
+                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este producto se eliminara ¿Estás seguro?') ?
+                                document.getElementById('form-delete-<%= product._id %>').submit() : null">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <div class="modal fade" id="modal-<%= product._id %>" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="/admin/upload/<%= product._id %>" method="POST"
+                                    enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Imagen producto</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="image">Imagen</label>
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" name="image"
+                                                            accept="image/*"
+                                                            onchange="loadImage(event, '<%= product._id %>')" required>
+                                                        <label class=" custom-file-label" for="image">Seleccionar
+                                                            imagen</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 my-3 <% if (!product.photo_url) { %> d-none <% } %>"
+                                                id="containerImagePreview-<%= product._id %>">
+                                                <div class="imagen-rectangular rounded-lg">
+                                                    <img src="<% if (product.photo_url) { %> /img/products/<%= product.photo_url %> <% } %>"
+                                                        id="imagePreview-<%= product._id %>" class="rounded-lg">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Guardar foto</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <form action="/admin/products/<%= product._id %>?_method=DELETE" id="form-delete-<%= product._id %>"
+                        class="d-none" method="POST">
+                        <input type="hidden" name="_method" value="DELETE" />
+                    </form>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+    const loadImage = (e, id) => {
+        let container = document.getElementById(`containerImagePreview-${id}`);
+        container.classList.contains('d-none') ? container.classList.remove('d-none') : null;
+
+        let image = document.getElementById(`imagePreview-${id}`);
+        image.src = URL.createObjectURL(e.target.files[0]);
+        image.onload = () => {
+            URL.revokeObjectURL(image.src);
+        }
+    }
+</script>
+
+<script src="/js/admin/jquery.dataTables.min.js"></script>
+<script src="/js/admin/dataTables.bootstrap4.min.js"></script>
+<script src="/js/admin/dataTables.responsive.min.js"></script>
+<script src="/js/admin/responsive.bootstrap4.min.js"></script>
+
+
+<script>
+    $('#dataTable').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        "order": [
+            [1, "desc"]
+        ]
+    });
+</script>
+
+
+<%- include ('../partials/footer.html') %>

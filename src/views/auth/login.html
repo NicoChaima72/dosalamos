@@ -1,0 +1,30 @@
+<%- include ('../partials/head.html') %>
+<%- include ('../partials/navbar.html') %>
+
+<div class="container mt-5 mb-5">
+    <div class="col-md-6 mx-auto">
+        <h1 class="mb-3">Iniciar sesion</h1>
+        <form action="/login" method="POST" class="validate-form">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control field-required" autofocus
+                    value="<% if (data.email) { %> <%= data.email  %> <% } %>">
+                <div class="form-text text-danger d-none">
+                    Campo requerido
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" name="password" id="password" class="form-control field-required">
+                <div class="form-text text-danger d-none">
+                    Campo requerido
+                </div>
+            </div>
+            <button type="submit" id="buttonSubmit" class="btn btn-primary btn-block">Ingresar</button>
+        </form>
+        <hr>
+        <p class="text-center">¿No tienes cuenta? <a href="/register" class="text-link">Creemos una.</a></p>
+    </div>
+</div>
+
+<%- include ('../partials/footer.html') %>
