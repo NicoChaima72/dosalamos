@@ -11,8 +11,8 @@ const mysqlSession = require("express-mysql-session");
 
 // initializations
 const app = express();
-const { database } = require("./keys");
 require("./config/config");
+const { database } = require("./keys");
 require("./database");
 require("./config/passport");
 
