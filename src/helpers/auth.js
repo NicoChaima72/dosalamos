@@ -36,4 +36,14 @@ helpers.isUser = (req, res, next) => {
 	}
 };
 
+helpers.isNotUser = (req, res, next) => {
+	if (req.user.role !== "USER_ROLE") {
+		return next();
+	} else {
+		res.redirect("/");
+	}
+
+	next();
+};
+
 module.exports = helpers;

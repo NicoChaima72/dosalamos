@@ -35,7 +35,7 @@
                         <%= user.name %>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <% if (user.role == 'ADMIN_ROLE') { %>
+                        <% if (user.role == 'ADMIN_ROLE' || user.role == 'MODERATOR_ROLE') { %>
                         <a class="dropdown-item" href="/admin">Administrar</a>
                         <div class="dropdown-divider"></div>
                         <% } %>

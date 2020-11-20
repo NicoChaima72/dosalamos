@@ -1,56 +1,64 @@
 const express = require("express");
+const pool = require("../../database");
 const router = express.Router();
-const Contact = require("../../models/Contact");
+const moment = require("moment");
 
-const { isAuthenticated, isAdmin } = require("../../helpers/auth");
+const { isAuthenticated, isNotUser } = require("../../helpers/auth");
 
-router.get("/admin/contacts", async (req, res) => {
-	const contacts = await Contact.find();
+router.get(
+	"/admin/contacts",
+	[isAuthenticated, isNotUser],
+	async (req, res) => {
+		const contacts = await pool.query("SELECT * FROM contacts");
+		contacts.forEach((contact) => {
+			contact.date = moment(contact.date).format("DD-MM-YY   hh:mm:ss");
+		});
 
-	res.render("admin/contact/list.html", {
-		title: "Lista pedidos",
-		file: "admin.contacts",
-		orders: contacts,
-	});
-});
+		res.render("admin/contact/list.html", {
+			title: "Lista pedidos",
+			file: "admin.contacts",
+			orders: contacts,
+		});
+	}
+);
 
-router.put("/admin/contacts/:id", (req, res) => {
-	const id = req.params.id;
+router.put(
+	"/admin/contacts/:id",
+	[isAuthenticated, isNotUser],
+	async (req, res) => {
+		const id = req.params.id;
 
-	Contact.findByIdAndUpdate(id, { state: 1 }, { new: true }, (err, contact) => {
-		if (err) return res.status(400).json({ ok: false, err });
+		await pool.query("UPDATE contacts SET state = 1 WHERE id = ?", [id]);
 
-		req.flash("success_msg", "Pedido actualizado correctamente");
+		req.flash("success", "Pedido actualizado correctamente");
 		res.redirect("/admin/contacts");
-	});
-});
+	}
+);
 
-router.put("/admin/contacts/:id/pending", (req, res) => {
-	const id = req.params.id;
+router.put(
+	"/admin/contacts/:id/pending",
+	[isAuthenticated, isNotUser],
+	async (req, res) => {
+		const id = req.params.id;
 
-	Contact.findByIdAndUpdate(id, { state: 0 }, { new: true }, (err, contact) => {
-		if (err) return res.status(400).json({ ok: false, err });
+		await pool.query("UPDATE contacts SET state = 0 WHERE id = ?", [id]);
 
-		req.flash("success_msg", "Pedido actualizado correctamente");
+		req.flash("success", "Pedido actualizado correctamente");
 		res.redirect("/admin/contacts");
-	});
-});
+	}
+);
 
-router.delete("/admin/contacts/:id", (req, res) => {
-	const id = req.params.id;
+router.delete(
+	"/admin/contacts/:id",
+	[isAuthenticated, isNotUser],
+	async (req, res) => {
+		const id = req.params.id;
 
-	Contact.findByIdAndRemove(id, (err, contact) => {
-		if (err) return res.status(400).json({ ok: false, err });
+		await pool.query("DELETE FROM contacts WHERE id = ?", [id]);
 
-		if (contact === null)
-			return res.status(400).json({
-				ok: false,
-				err: { message: "Id no encontrado" },
-			});
-
-		req.flash("success_msg", "Pedido eliminado correctamente");
+		req.flash("success", "Pedido eliminado correctamente");
 		res.redirect("/admin/contacts");
-	});
-});
+	}
+);
 
 module.exports = router;

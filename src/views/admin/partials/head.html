@@ -62,7 +62,8 @@
                 <div class="user-panel mt-2 pb-2 mb-3 d-flex">
                     <div class="info">
                         <a class="d-block"><%= user.name %></a>
-                        <p class="text-muted text-sm m-0 p-0">Administrador <span
+                        <p class="text-muted text-sm m-0 p-0">
+                            <% if (user.role === 'ADMIN_ROLE'){%>Administrador<%}else{%>Moderador<%}%><span
                                 class="badge badge-success">online</span></p>
                     </div>
                 </div>
@@ -72,41 +73,41 @@
                         data-accordion="false">
                         <li class="nav-item">
                             <a href="/admin" class="nav-link <% if (file=='admin.home') { %> active <% } %>">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                </p>
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Dashboard
+                            </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/contacts"
-                                class="nav-link <% if (file=='admin.contacts') { %> active <% } %>">
-                                <i class="nav-icon fas fa-bullhorn"></i>
-                                <p>
-                                    Pedidos
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/products"
-                                class="nav-link <% if (file=='admin.products') { %> active <% } %>">
-                                <i class="nav-icon fas fa-apple-alt"></i>
-                                <p>
-                                    Productos
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/users" class="nav-link <% if (file=='admin.users') { %> active <% } %>">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Usuarios
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/contacts"
+                                    class="nav-link <% if (file=='admin.contacts') { %> active <% } %>">
+                                    <i class="nav-icon fas fa-bullhorn"></i>
+                                    <p>
+                                        Pedidos
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/products"
+                                    class="nav-link <% if (file=='admin.products') { %> active <% } %>">
+                                    <i class="nav-icon fas fa-apple-alt"></i>
+                                    <p>
+                                        Productos
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/users" class="nav-link <% if (file=='admin.users') { %> active <% } %>">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>
+                                        Usuarios
+                                    </p>
+                                </a>
+                            </li>
+                            </ul>
+                            </nav>
+                    </div>
         </aside>
 
 

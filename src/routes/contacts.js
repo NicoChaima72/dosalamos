@@ -1,9 +1,9 @@
 const moment = require("moment");
 const express = require("express");
 const router = express.Router();
-const Contact = require("../models/Contact");
 
 const { isAuthenticated, isAdmin, isUser } = require("../helpers/auth");
+const pool = require("../database");
 
 router.get("/contact", [isAuthenticated, isUser], (req, res) => {
 	res.render("pages/contact.html", { title: "Contacto", file: "contact" });
@@ -34,14 +34,11 @@ router.post("/contact", async (req, res) => {
 		res.redirect("/contact");
 	}
 
-	const newContact = new Contact({ name, email, phone, message });
-	newContact.dateShow = moment(Date.now()).format("DD-MM-YY   hh:mm:ss");
-	await newContact.save();
+	const newContact = { name, lastname, email, phone, message };
+	await pool.query("INSERT INTO contacts SET ?", [newContact]);
 
-	req.flash("success_msg", "Mensaje enviado correctamente");
+	req.flash("success", "Mensaje enviado correctamente");
 	res.redirect("/contact");
 });
-
-
 
 module.exports = router;

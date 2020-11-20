@@ -3,8 +3,11 @@
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-12 d-flex align-items-center justify-content-between">
                 <h1>Usuarios</h1>
+                <% if(user.role ==='ADMIN_ROLE'){ %>
+                <a href="/admin/userbds/create" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Agregar</a>
+                <%} %>
             </div>
         </div>
     </div>
@@ -19,36 +22,62 @@
                     <th>Email</th>
                     <th class="d-none">Fecha</th>
                     <th>Nombre</th>
-                    <th>Rol</th>
+                    <% if(user.role ==='ADMIN_ROLE'){ %>
                     <th></th>
+                    <% } %>
                 </tr>
             </thead>
             <tbody>
-                <% users.forEach((user) => { %>
+                <% users.forEach((userbd) => { %>
                 <tr>
-                    <td><%= user.email %></td>
-                    <td class="d-none"><%= user.date %></td>
-                    <td><%= user.name %></td>
-                    <td><%= user.role %></td>
+                    <td><%= userbd.email %></td>
+                    <td class="d-none"><%= userbd.date %></td>
+                    <td><%= userbd.name %></td>
+                    <% if (user.role === 'ADMIN_ROLE') { %>
                     <td>
                         <div class="d-flex">
-                            <% if (user.role != 'ADMIN_ROLE') { %>
                             <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este usuario se eliminara ¿Estás seguro?') ?
-                                document.getElementById('form-delete-<%= user.id %>').submit() : null">
+                                document.getElementById('form-delete-<%= userbd.id %>').submit() : null">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <% } %>
                         </div>
                     </td>
-                    <form action="/admin/users/<%= user.id %>?_method=DELETE" id="form-delete-<%= user.id %>"
+                    <form action="/admin/users/<%= userbd.id %>?_method=DELETE" id="form-delete-<%= userbd.id %>"
                         class="d-none" method="POST">
                         <input type="hidden" name="_method" value="DELETE" />
+                    </form>
+                    <% } %>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+
+    <% if(moderators.length > 0 && user.role === 'ADMIN_ROLE') { %>
+    <div class="card p-2 mt-5">
+        <div class="card-header mb-3 p-2 text-lg">Listado de moderadores</div>
+        <table id="dataTable1" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th class="d-none">Fecha</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% moderators.forEach((userbd) => { %>
+                <tr>
+                    <td><%= userbd.email %></td>
+                    <td class="d-none"><%= userbd.date %></td>
+                    <td><%= userbd.name %></td>
                     </form>
                 </tr>
                 <% }) %>
             </tbody>
         </table>
     </div>
+    <% } %>
 </section>
 
 
@@ -61,6 +90,20 @@
 
 <script>
     $('#dataTable').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        "order": [
+            [1, "desc"]
+        ]
+    });
+    $('#dataTable1').DataTable({
         "paging": true,
         "lengthChange": true,
         "searching": true,

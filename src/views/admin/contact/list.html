@@ -16,7 +16,6 @@
             <thead>
                 <tr>
                     <th>Fecha</th>
-                    <th class="d-none">Fecha</th>
                     <th>E</th>
                     <th>Mensaje</th>
                     <th>Email</th>
@@ -28,9 +27,6 @@
                 <% orders.forEach((order) => { %>
                 <tr>
                     <td>
-                        <%= order.dateShow %>
-                    </td>
-                    <td class="d-none">
                         <%= order.date %>
                     </td>
                     <td>
@@ -64,16 +60,16 @@
                     <td>
                         <div class="d-flex">
                             <button type="button" class="btn btn-<% if (order.state === 0) { %>warning<% } else { %>success<% } %> btn-sm
-                                mx-1" data-toggle="modal" data-target="#modal-<%= order._id %>">
+                                mx-1" data-toggle="modal" data-target="#modal-<%= order.id %>">
                                 <i class="fas fa-eye"></i>
                             </button>
                             <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este pedido se eliminara ¿Estás seguro?') ?
-                                document.getElementById('form-delete-<%= order._id %>').submit() : null">
+                                document.getElementById('form-delete-<%= order.id %>').submit() : null">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
-                    <div class="modal fade" id="modal-<%= order._id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal fade" id="modal-<%= order.id %>" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -111,12 +107,12 @@
                                 <div class="modal-footer">
                                     <% if (order.state == 0) { %>
                                     <button type="button" class="btn btn-success" onclick="confirm('¿Actualizar pedido a finalizado?') ?
-                                        document.getElementById('form-edit-<%= order._id %>').submit() : null">
+                                        document.getElementById('form-edit-<%= order.id %>').submit() : null">
                                         Marcar finalizado
                                     </button>
                                     <% } else { %>
                                     <button type="button" class="btn btn-warning" onclick="confirm('¿Actualizar pedido a pendiente?') ?
-                                        document.getElementById('form-edit-<%= order._id %>-pending').submit() : null">
+                                        document.getElementById('form-edit-<%= order.id %>-pending').submit() : null">
                                         Marcar pendiente
                                     </button>
                                     <% } %>
@@ -124,16 +120,16 @@
                             </div>
                         </div>
                     </div>
-                    <form action="/admin/contacts/<%= order._id %>?_method=DELETE" id="form-delete-<%= order._id %>"
+                    <form action="/admin/contacts/<%= order.id %>?_method=DELETE" id="form-delete-<%= order.id %>"
                         class="d-none" method="POST">
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>
-                    <form action="/admin/contacts/<%= order._id %>?_method=PUT" id="form-edit-<%= order._id %>"
+                    <form action="/admin/contacts/<%= order.id %>?_method=PUT" id="form-edit-<%= order.id %>"
                         class="d-none" method="POST">
                         <input type="hidden" name="_method" value="PUT" />
                     </form>
-                    <form action="/admin/contacts/<%= order._id %>/pending?_method=PUT"
-                        id="form-edit-<%= order._id %>-pending" class="d-none" method="POST">
+                    <form action="/admin/contacts/<%= order.id %>/pending?_method=PUT"
+                        id="form-edit-<%= order.id %>-pending" class="d-none" method="POST">
                         <input type="hidden" name="_method" value="PUT" />
                     </form>
                 </tr>
