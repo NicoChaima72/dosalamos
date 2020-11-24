@@ -1,0 +1,78 @@
+<%- include ('../partials/head.html') %>
+<%- include ('../partials/navbar.html') %>
+
+<div class="container mt-5">
+    <h2 class="d-block d-md-none h1">Mi carrito</h2>
+    <h2 class="d-none d-md-block display-5">Mi carrito</h2>
+    <hr>
+    <div class="row">
+        <% if(products.length === 0) { %>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis recusandae, quis aliquid atque, velit
+            molestias odit fugiat fugit nam autem et labore accusamus sunt ex iste repellat aliquam veritatis non.</p>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ex rerum quae necessitatibus ea recusandae corrupti
+            velit dicta sed libero! Accusantium aut neque esse pariatur, similique perspiciatis possimus quidem atque.
+            Nam.</p>
+        <p class="lead text-center mt-4">Carrito vacio</p>
+        <a href="/products" class="btn btn-success w-auto mx-auto mb-5">Ver productos</a>
+        <% } else { %>
+
+        <form action="/cart" method="POST">
+            <% products.forEach((product) => { %>
+            <div class="col-12 row">
+                <div class="col-4 col-md-3">
+                    <img src="/img/products/<%= product.photo_url %>" alt="" class="img-thumbnail">
+                </div>
+                <div class="col-8 col-md-9">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h4><a href="/products/<%= product.id %>"><%= product.name %></a></h4>
+                        <a href="/cart/<%= product.id %>/delete">x</a>
+                    </div>
+                    <p class="text-success lead">$ <%= product.price %></p>
+                    <% if(product.state === 0 || product.stock === 0) { %>
+                    <% if(product.state === 0) { %>
+                    <button class="btn btn-secondary" disabled>Sin stock</button>
+                    <% } else { %>
+                    <button class="btn btn-secondary" disabled>No disponible</button>
+                    <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <hr class="my-3">
+            <% }) %>
+            <h3>Informacion</h3>
+            <div class="row mt-5">
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="name" class="form-label">Nombres (*)</label>
+                    <input type="text" id="name" name="name" class="form-control field-required"
+                        value="<% if(data.name) {%><%= data.name %><% } %>" required>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="lastname" class="form-label">Apellidos (*)</label>
+                    <input type="text" id="lastname" name="lastname" class="form-control field-required"
+                        value="<% if(data.lastname) {%><%= data.lastname %><% } %>" required>
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="email" class="form-label">Email (*)</label>
+                    <input type="email" id="email" name="email" class="form-control" disabled value="<%= user.email %>">
+                </div>
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="telefono" class="form-label">Telefono (*)</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">+56</span>
+                        <input type="number" id="telefono" name="phone" class="form-control field-required"
+                            value="<% if(data.phone) {%><%= data.phone %><% } %>" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="direction" class="form-label">Direccion (*)</label>
+                    <textarea class="form-control field-required" name="direction" id="direction" rows="5"
+                        required><% if(data.direction) {%><%= data.direction %><% } %></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-block my-4">Comprar</button>
+        </form>
+        <% } %>
+    </div>
+</div>
+
+<%- include ('../partials/footer.html') %>

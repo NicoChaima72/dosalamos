@@ -63,7 +63,7 @@
                     <div class="info">
                         <a class="d-block"><%= user.name %></a>
                         <p class="text-muted text-sm m-0 p-0">
-                            Administrador<span class="badge badge-success">online</span></p>
+                            Moderador<span class="badge badge-success">online</span></p>
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="/admin" class="nav-link <% if (file=='admin.home') { %> active <% } %>">
+                            <a href="/moderator" class="nav-link <% if (file=='moderator.home') { %> active <% } %>">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
@@ -79,10 +79,20 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/admin/users" class="nav-link <% if (file=='admin.users') { %> active <% } %>">
-                                <i class="nav-icon fas fa-users"></i>
+                            <a href="/moderator/orders"
+                                class="nav-link <% if (file=='moderator.orders') { %> active <% } %>">
+                                <i class="nav-icon fas fa-bullhorn"></i>
                                 <p>
-                                    Usuarios
+                                    Pedidos
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/moderator/products"
+                                class="nav-link <% if (file=='moderator.products') { %> active <% } %>">
+                                <i class="nav-icon fas fa-apple-alt"></i>
+                                <p>
+                                    Productos
                                 </p>
                             </a>
                         </li>

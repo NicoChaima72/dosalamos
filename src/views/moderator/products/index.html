@@ -5,7 +5,7 @@
         <div class="row mb-2">
             <div class="col-12 d-flex align-items-center justify-content-between">
                 <h1>Productos</h1>
-                <a href="/admin/products/create" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Agregar</a>
+                <a href="/moderator/products/create" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Agregar</a>
             </div>
         </div>
     </div>
@@ -17,17 +17,19 @@
         <table id="dataTable" class="table table-bordered table-hover">
             <thead>
                 <tr>
+                    <th class="d-none">ID</th>
                     <th>Imagen</th>
-                    <th class="d-none">Fecha</th>
                     <th>Producto</th>
                     <th>Precio</th>
                     <th>Descripcion</th>
+                    <th>Stock</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <% products.forEach((product) => { %>
                 <tr>
+                    <td class="d-none"><%= product.id %></td>
                     <td>
                         <% if (product.photo_url) { %>
                         <div class="imagen-rectangular">
@@ -38,9 +40,8 @@
                             data-target="#modal-<%= product.id %>">Agregar</button>
                         <% } %>
                     </td>
-                    <td class="d-none"><%= product.date %></td>
                     <td><%= product.name %></td>
-                    <td><%= product.price %></td>
+                    <td>$ <%= product.price %></td>
                     <td>
                         <% if (product.description.length > 60) { %>
                         <%=   product.description.substring(0, 60) %> ...
@@ -48,26 +49,59 @@
                         <%= product.description %>
                         <% } %>
                     </td>
+                    <td><%= product.stock %></td>
                     <td>
                         <div class="d-flex">
-                            <a href="/admin/products/<%= product.id %>/edit" class="btn btn-primary btn-sm mx-1"><i
+                            <a href="/moderator/products/<%= product.id %>/edit" class="btn btn-primary btn-sm mx-1"><i
                                     class="fas fa-pen"></i></a>
                             <button type="button" class="btn btn-success btn-sm mx-1" data-toggle="modal"
                                 data-target="#modal-<%= product.id %>">
                                 <i class="far fa-image"></i>
                             </button>
+                            <button type="button" class="btn btn-info btn-sm mx-1" data-toggle="modal"
+                                data-target="#modal-<%= product.id %>-stock">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
                             <a href="/product/<%= product.id %>" target="_blank" class="btn btn-warning btn-sm mx-1"><i
                                     class="fas fa-eye"></i></a>
-                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este producto se eliminara ¿Estás seguro?') ?
+                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Dar de baja al producto <%= product.name %>') ?
                                 document.getElementById('form-delete-<%= product.id %>').submit() : null">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-arrow-down"></i>
                             </button>
                         </div>
                     </td>
+                    <div class="modal fade" id="modal-<%= product.id %>-stock" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="/moderator/products/<%= product.id %>/stock?_method=PUT" method="POST">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Actualizar Stock
+                                            <%= product.name %></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="image">Stock</label>
+                                                <input type="number" name="stock" class="form-control"
+                                                    value="<%= product.stock %>" min="0" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Actualizar stock</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal-<%= product.id %>" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="/admin/upload/<%= product.id %>" method="POST"
+                                <form action="/moderator/upload/<%= product.id %>" method="POST"
                                     enctype="multipart/form-data">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Imagen producto</h5>
@@ -105,8 +139,8 @@
                             </div>
                         </div>
                     </div>
-                    <form action="/admin/products/<%= product.id %>?_method=DELETE" id="form-delete-<%= product.id %>"
-                        class="d-none" method="POST">
+                    <form action="/moderator/products/<%= product.id %>?_method=DELETE"
+                        id="form-delete-<%= product.id %>" class="d-none" method="POST">
                         <input type="hidden" name="_method" value="DELETE" />
                     </form>
                 </tr>
@@ -147,7 +181,7 @@
             "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
         },
         "order": [
-            [1, "desc"]
+            [0, "desc"]
         ]
     });
 </script>

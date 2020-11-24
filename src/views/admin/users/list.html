@@ -36,9 +36,9 @@
                     <% if (user.role === 'ADMIN_ROLE') { %>
                     <td>
                         <div class="d-flex">
-                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Este usuario se eliminara ¿Estás seguro?') ?
+                            <button class="btn btn-outline-danger btn-sm mx-1" onclick="confirm('Dar de baja a <%= userbd.email %> ?') ?
                                 document.getElementById('form-delete-<%= userbd.id %>').submit() : null">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-arrow-down"></i>
                             </button>
                         </div>
                     </td>

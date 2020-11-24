@@ -18,6 +18,31 @@
                 <%= product.description %>
             </p>
             <p class="text-success font-weight-normal h4">$<%= product.price %></p>
+            <% if(user) { %>
+            <% if(user.role === 'USER_ROLE') { %>
+            <% if(product.stock === 0 || product.state === 0) { %>
+            <% if(product.stock === 0) { %>
+            <button class="btn btn-secondary" disabled></i>Sin stock</button>
+            <% } else { %>
+            <button class="btn btn-secondary" disabled>No disponible</button>
+            <% } %>
+            <% } else { %>
+            <% if(isAdded) { %>
+            <button class="btn btn-secondary" disabled><i class="fas fa-check mr-1"></i>En el carrito</button>
+            <% } else { %>
+            <button class="btn btn-success" onclick="document.getElementById('addCart').submit()">
+                <i class="fas fa-shopping-cart mr-1"></i> Agregar al carrito
+            </button>
+            <form action="/products/<%= product.id %>/add-cart" method="POST" class="d-none" id="addCart">
+            </form>
+            <% } %>
+
+            <% } %>
+
+            <% } %>
+            <% } else { %>
+            <a href="/login" class="text-secondary lead">Inicia sesion para agregar productos al carrito</a>
+            <% } %>
         </div>
     </div>
 </div>

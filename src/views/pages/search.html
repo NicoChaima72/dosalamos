@@ -2,10 +2,16 @@
 <%- include ('../partials/navbar.html') %>
 
 <div class="container mt-3">
-    <h2 class="d-block d-md-none h1">Todos los productos</h2>
-    <h2 class="d-none d-md-block display-5">Todos los productos</h2>
+    <h2 class="d-block d-md-none h1">Buscando productos</h2>
+    <h2 class="d-none d-md-block display-5">Buscando productos</h2>
     <hr>
     <div class="row">
+        <p class="lead">Resultados para: <%= search %></p>
+        <% if(products.length === 0) { %>
+        <p class="text-center lead">
+            No hay productos con esa descripcion
+        </p>
+        <% } else { %>
         <% products.forEach((product) => { %>
         <div class="col-6 col-md-4 mb-3 p-1">
             <a href="/products/<%= product.id %>" class="card rounded-lg">
@@ -26,6 +32,7 @@
             </a>
         </div>
         <% }) %>
+        <% } %>
     </div>
 </div>
 

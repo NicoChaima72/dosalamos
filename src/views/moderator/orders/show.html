@@ -1,0 +1,90 @@
+<%- include ('../partials/head.html') %>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <h1>Ver pedido</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="card p-2">
+        <div class="card-header">Pedido ID: <%= order.id %></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="patent">Cliente</label>
+                        <input type="text" disabled class="form-control"
+                            value="<%= order.name %> <%= order.lastname %>">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="patent">Email</label>
+                        <input type="text" disabled class="form-control" value="<%= order.name %> <%= order.email %>">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="patent">Telefono</label>
+                        <input type="text" disabled class="form-control" value="<%= order.name %> <%= order.phone %>">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="patent">Fecha pedido</label>
+                        <input type="text" disabled class="form-control" value="<%= order.created_at %>">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="patent">Direccion</label>
+                        <textarea rows="1" class="form-control" disabled><%= order.direction %></textarea>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <table id="" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="">ID</th>
+                        <th class="">Descripcion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% products.forEach((product) => { %>
+                    <tr>
+                        <td>
+                            <div class="imagen-rectangular">
+                                <img src="/img/products/<%= product.photo_url %>" alt="" width="100px">
+                            </div>
+                        </td>
+                        <td><%= product.id %></td>
+                        <td><%= product.name %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% if(order.state === 1) { %>
+        <div class="card-footer">
+            <form action="/moderator/orders/<%= order.id %>?_method=PUT" method="post">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="submit" class="btn btn-success" name="option" value="Entregado">
+                <input type="submit" class="btn btn-danger" name="option" value="Rechazado">
+            </form>
+        </div>
+        <% } %>
+
+    </div>
+</section>
+
+
+
+<%- include ('../partials/footer.html') %>

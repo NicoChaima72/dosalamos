@@ -15,7 +15,7 @@
         <div class="card-header">
             <h3 class="card-title">Informacion</h3>
         </div>
-        <form action="/admin/products/<%= product.id %>?_method=PUT" method="POST">
+        <form action="/moderator/products/<%= product.id %>?_method=PUT" method="POST">
             <input type="hidden" name="_method" value="PUT">
             <div class="card-body row">
                 <div class="col-12">
@@ -35,23 +35,6 @@
                             required min="0">
                     </div>
                 </div>
-                <!-- <div class="col-12">
-                    <div class="form-group">
-                        <label for="image">Imagen</label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="image" id="image" accept="image/*"
-                                    onchange="loadImage(event)">
-                                <label class=" custom-file-label" for="image">Subir imagen</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 my-3 d-none" id="containerImagePreview">
-                        <div class="imagen-cuadrada rounded-lg">
-                            <img id="imagePreview" class="rounded-lg">
-                        </div>
-                    </div>
-                </div> -->
             </div>
 
             <div class="card-footer">
@@ -60,19 +43,6 @@
         </form>
     </div>
 </section>
-
-<script>
-    const loadImage = (e) => {
-        let container = document.getElementById('containerImagePreview');
-        container.classList.contains('d-none') ? container.classList.remove('d-none') : null;
-
-        let image = document.getElementById('imagePreview');
-        image.src = URL.createObjectURL(e.target.files[0]);
-        image.onload = () => {
-            URL.revokeObjectURL(image.src);
-        }
-    }
-</script>
 
 
 <%- include ('../partials/footer.html') %>

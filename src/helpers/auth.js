@@ -1,49 +1,18 @@
-const helpers = {};
+const bcrypt = require("bcryptjs");
 
-helpers.isAuthenticated = (req, res, next) => {
-	if (req.isAuthenticated()) {
-		return next();
-	} else {
-		req.flash("error", "No estás autenticado");
-		res.redirect("/login");
-	}
+const auth = {};
+
+auth.encryptPassword = async (password) => {
+	const salt = await bcrypt.genSalt(10);
+	const hash = await bcrypt.hash(password, salt);
+	return hash;
 };
 
-helpers.verifyNotAuthenticated = (req, res, next) => {
-	if (!req.isAuthenticated()) {
-		return next();
-	} else {
-		req.flash("error_msg", "Ya estás autenticado");
-		res.redirect("/");
+auth.comparePasswords = async (password, savedPassword) => {
+	try {
+		return await bcrypt.compare(password, savedPassword);
+	} catch (err) {
+		console.log(err);
 	}
 };
-
-helpers.isAdmin = (req, res, next) => {
-	if (req.user.role === "ADMIN_ROLE") {
-		return next();
-	} else {
-		req.flash("error", "Acceso no autorizado");
-		res.redirect("/");
-	}
-};
-
-helpers.isUser = (req, res, next) => {
-	if (req.user.role === "USER_ROLE") {
-		return next();
-	} else {
-		req.flash("error", "Solo pueden acceder usuarios");
-		res.redirect("/");
-	}
-};
-
-helpers.isNotUser = (req, res, next) => {
-	if (req.user.role !== "USER_ROLE") {
-		return next();
-	} else {
-		res.redirect("/");
-	}
-
-	next();
-};
-
-module.exports = helpers;
+module.exports = auth;

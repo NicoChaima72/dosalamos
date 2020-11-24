@@ -2,7 +2,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const pool = require("../database");
-const bcrypt = require("../config/bcrypt");
+const bcrypt = require("../helpers/auth");
+
+const { User } = require("../models/index");
 
 passport.use(
 	"local.signin",
@@ -13,34 +15,39 @@ passport.use(
 			passReqToCallback: true,
 		},
 		async (req, email, password, done) => {
-			const rows = await pool.query("SELECT * FROM users WHERE email = ?", [
-				email,
-			]);
-			if (rows.length > 0) {
-				const user = rows[0];
-				const validPassword = await bcrypt.comparePasswords(
-					password,
-					user.password
-				);
-				if (validPassword) done(null, user);
-				else done(null, false, req.flash("error", "Contraseña incorrecta"));
-			} else done(null, false, req.flash("error", "Email incorrecto"));
-		}
-	)
-);
+			const user = await User.findByEmail(email);
 
-passport.use(
-	"local.signup",
-	new LocalStrategy(
-		{
-			usernameField: "email",
-			passwordField: "password",
-			passReqToCallback: true,
-		},
-		async (req, email, password, done) => {
-			const user = { email, name: req.body.name };
-			user.password = await bcrypt.encryptPassword(password);
-			await pool.query("INSERT INTO users SET ?", [user]);
+			if (!user) {
+				return done(
+					null,
+					false,
+					req.flash("error", "Email y/o contraseña incorrecta")
+				);
+			}
+
+			const validPassword = await bcrypt.comparePasswords(
+				password,
+				user.password
+			);
+			if (!validPassword) {
+				return done(
+					null,
+					false,
+					req.flash("error", "Email y/o contraseña incorrecta")
+				);
+			}
+
+			if (user.state === 0) {
+				return done(
+					null,
+					false,
+					req.flash(
+						"error",
+						"Usuario dado de baja, comunicarse con soporte tecnico"
+					)
+				);
+			}
+
 			done(null, user);
 		}
 	)
@@ -48,8 +55,6 @@ passport.use(
 
 // si se loguea se almacena en sesion
 passport.serializeUser((user, done) => {
-	console.log("Serialize: ");
-	console.log(user);
 	done(null, user.email);
 });
 

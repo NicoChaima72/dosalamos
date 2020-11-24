@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary py-2 py-md-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 py-md-3">
     <div class="container">
         <a class="navbar-brand font-weight-bold" href="/">DOS ALAMOS</a>
         <button class="navbar-toggler border-0" type="button" data-toggle="collapse"
@@ -13,32 +13,36 @@
                     <a class="nav-link <% if (file=='home') { %> active <% } %>" href="/">INICIO</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <% if (file=='product') { %> active <% } %>" href="/product">PRODUCTOS</a>
+                    <a class="nav-link <% if (file=='product') { %> active <% } %>" href="/products">PRODUCTOS</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <% if (file=='about') { %> active <% } %>" href="/about">NOSOTROS</a>
                 </li>
+                <form action="/products/search" class="form-inline my-2 my-lg-0 d-flex">
+                    <input class="form-control mr-sm-2" name="s" type="search" required placeholder="Buscar producto"
+                        aria-label="Search">
+                </form>
                 <% if (!user) { %>
                 <li class="nav-item">
                     <a href="/login" class="btn btn-outline-light">Ingresar</a>
                 </li>
                 <% } else { %>
-                <% if (user.role == 'USER_ROLE') { %>
-                <li class="nav-item">
-                    <a class="nav-link <% if (file=='contact') { %> active <% } %>" href="/contact">CONTACTO</a>
-                </li>
-                <% } %>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <%= user.name %>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <% if (user.role == 'ADMIN_ROLE' || user.role == 'MODERATOR_ROLE') { %>
-                        <a class="dropdown-item" href="/admin">Administrar</a>
-                        <div class="dropdown-divider"></div>
+                        <% if (user.role == 'ADMIN_ROLE') { %>
+                        <a class="dropdown-item" href="/admin">Panel administrador</a>
                         <% } %>
+                        <% if(user.role == 'MODERATOR_ROLE') { %>
+                        <a class="dropdown-item" href="/admin">Panel moderador</a>
+                        <% } %>
+                        <% if(user.role == 'USER_ROLE') { %>
+                        <a class="dropdown-item" href="/cart"><i class="fas fa-shopping-cart mr-2"></i>Mi carrito</a>
+                        <% } %>
+                        <div class="dropdown-divider"></div>
                         <button class="dropdown-item text-danger"
                             onclick="document.getElementById('formLogout').submit()">
                             Cerrar sesion

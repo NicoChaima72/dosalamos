@@ -7,11 +7,7 @@ const fileUpload = require("express-fileupload");
 const { isAuthenticated, isAdmin } = require("../../helpers/auth");
 const pool = require("../../database");
 
-router.use(
-	fileUpload({
-		// useTempFiles: true,
-	})
-);
+router.use(fileUpload({}));
 
 router.post(
 	"/admin/upload/:id",
